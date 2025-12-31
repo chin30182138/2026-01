@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>仙人指路 - V33.0 專業旺衰運算版</title>
+    <title>仙人指路 - 榮格心理版 (V34.0)</title>
     <style>
         :root {
             --gold: #d4af37; 
@@ -30,11 +30,22 @@
 
         .container { width: 100%; max-width: 1200px; position: relative; }
 
-        /* Header */
+        /* Header & Logo */
         .header {
             text-align: center; border-bottom: 2px solid var(--gold); padding-bottom: 20px; margin-bottom: 20px; position: relative;
         }
-        .header h1 { color: var(--gold); margin: 0; letter-spacing: 2px; }
+        
+        .logo-img {
+            max-width: 150px;
+            height: auto;
+            margin-bottom: 10px;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .header h1 { color: var(--gold); margin: 0; letter-spacing: 2px; font-size: 28px; }
+        .header p { color: #888; font-size: 14px; margin-top: 5px; }
 
         .settings-btn { position: absolute; top: 0; right: 0; font-size: 24px; cursor: pointer; color: #666; transition: 0.3s; z-index: 100; }
         .settings-btn:hover { color: var(--gold); transform: rotate(90deg); }
@@ -43,7 +54,7 @@
         #settings-panel {
             display: none; background: #222; border: 1px solid var(--gold); padding: 20px; border-radius: 8px; margin-bottom: 20px;
         }
-        .api-input, textarea.custom-prompt { width: 100%; background: #000; border: 1px solid #444; color: #0f0; border-radius: 4px; padding: 10px; box-sizing: border-box; }
+        .api-input, textarea.custom-prompt, input[type="text"] { width: 100%; background: #000; border: 1px solid #444; color: #0f0; border-radius: 4px; padding: 10px; box-sizing: border-box; margin-bottom: 10px; }
         input[type="color"] { -webkit-appearance: none; border: none; width: 50px; height: 30px; padding: 0; background: none; cursor: pointer; vertical-align: middle; }
 
         /* Layout */
@@ -89,7 +100,18 @@
 
         /* --- Card UI --- */
         #result-box { display: none; margin-top: 30px; }
-        .report-header-print { display: none; } 
+        
+        .report-header-print { display: none; } /* Default hidden, show in print */
+
+        .analyst-signature {
+            text-align: right;
+            margin-top: 20px;
+            font-size: 14px;
+            color: #888;
+            font-style: italic;
+            border-top: 1px solid #444;
+            padding-top: 10px;
+        }
 
         .card {
             background: #252525; border: 1px solid var(--gold); border-radius: 12px; padding: 25px; margin-bottom: 25px; box-shadow: 0 5px 15px rgba(0,0,0,0.5);
@@ -113,7 +135,7 @@
         .tag { font-size: 11px; padding: 2px 6px; border-radius: 4px; color: #fff; display: inline-block; font-weight: bold; }
         .t-yong { background: #27ae60; } .t-yuan { background: #2980b9; } .t-ji { background: #c0392b; } .t-chou { background: #8e44ad; } .t-xian { background: #555; color: #ccc; border: 1px solid #777; }
 
-        /* 五行文字 */
+        /* 五行文字 - 螢幕顯示金色 */
         .ganzhi-txt { font-size: 0.9em; font-weight: 800; color: #f1c40f; }
 
         /* 旺衰狀態標籤 */
@@ -131,12 +153,17 @@
         @media print {
             body { background-color: #fff; color: #000; padding: 0; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
             .container { max-width: 100%; width: 100%; padding: 20px; }
+            
+            /* Hide UI Elements */
             .header, .settings-btn, #settings-panel, .control-box, .btn-group { display: none !important; }
+            
+            /* Show Print Header */
             #result-box { display: block !important; margin-top: 0; }
+            .report-header-print { display: block; text-align: center; margin-bottom: 30px; border-bottom: 3px double #d4af37; padding-bottom: 20px; }
+            .report-header-print img { max-width: 120px; height: auto; display: block; margin: 0 auto 10px; }
+            .report-header-print h1 { font-size: 24pt; margin: 0; color: #000; font-family: "標楷體", serif; }
             
-            .report-header-print { display: block; text-align: center; margin-bottom: 20px; border-bottom: 3px double #d4af37; padding-bottom: 15px; }
-            .report-header-print h1 { font-size: 26pt; margin: 0; color: #000; font-family: "標楷體", serif; }
-            
+            /* Card Styling */
             .card {
                 background-color: var(--card-print-bg) !important;
                 border: none !important; 
@@ -146,11 +173,32 @@
                 border-bottom: 1px solid #ccc !important;
                 padding-bottom: 20px;
             }
-            .card-header { color: #000; border-bottom: 2px solid #000; border-top: 2px solid #000; padding-top: 10px; background-color: #f4f4f4 !important; }
+            
+            .card-header { 
+                color: #000; 
+                border-bottom: 2px solid #000; 
+                border-top: 2px solid #000;    
+                padding-top: 10px;
+                background-color: #f4f4f4 !important;
+            }
+
+            .analyst-signature {
+                color: #000;
+                border-top: 1px solid #000;
+                text-align: right;
+                font-weight: bold;
+                margin-top: 40px;
+                padding-top: 10px;
+            }
+
             p, h3, h4 { page-break-inside: avoid; orphans: 3; widows: 3; }
+            
             .hex-table th { color: #000; border-color: #000; }
             .hex-table td { color: #000; border-color: #999; }
+            
+            /* Force Black Text for Print */
             .ganzhi-txt { color: #000 !important; }
+
             .bar-yang, .bar-yin span { background-color: #000 !important; }
             .tag { border: 1px solid #000; color: #000; background-color: #fff !important; }
             .t-yong { background-color: #ddd !important; }
@@ -162,23 +210,29 @@
 
 <div class="container">
     <div class="header">
-        <div style="font-size: 40px; margin-bottom: 10px;">☯️</div>
+        <img src="logo.png" alt="Logo" class="logo-img" id="mainLogo">
         <h1>仙人指路神獸七十二型人格</h1>
-        <p>V33.0 專業旺衰運算版</p>
+        <p>榮格心理版 V34.0</p>
         <div class="settings-btn" onclick="toggleSettings()" title="設定">⚙️</div>
     </div>
 
     <div id="settings-panel">
         <label style="color:#fff;">🔑 OpenAI API Key</label>
         <input type="password" id="apiKey" class="api-input" placeholder="sk-..." onchange="saveSettings()">
-        <br><br>
-        <label style="color:#fff;">🎨 列印卡片底色</label>
+        
+        <label style="color:#fff; margin-top:10px;">🖼️ Logo 圖片網址 (或檔名)</label>
+        <input type="text" id="logoUrlIn" placeholder="預設: logo.png" onchange="saveSettings()">
+        
+        <label style="color:#fff; margin-top:10px;">✍️ 分析師署名</label>
+        <input type="text" id="analystNameIn" placeholder="例如: 張天師" onchange="saveSettings()">
+
+        <label style="color:#fff; margin-top:10px;">🎨 列印卡片底色</label>
         <div style="display:flex; align-items:center; gap:10px;">
             <input type="color" id="printColor" value="#fdfbf7" onchange="updatePrintColor()">
             <span style="color:#aaa; font-size:14px;">(點擊更換顏色)</span>
         </div>
-        <br>
-        <label style="color:#fff;">📝 自定義分析提示詞</label>
+        
+        <label style="color:#fff; margin-top:10px;">📝 自定義分析提示詞</label>
         <textarea id="customPrompt" class="custom-prompt" placeholder="輸入您的獨門心法..." onchange="saveSettings()"></textarea>
     </div>
 
@@ -220,9 +274,9 @@
 
     <div id="result-box">
         <div class="report-header-print">
-            <div style="font-size: 40px;">🐢</div>
-            <h1>仙人指路神獸七十二型人格分析報告</h1>
-            <p>Immortal Guidance Beast Analysis</p>
+            <img src="logo.png" id="printLogo" alt="Logo">
+            <h1>仙人指路神獸七十二型人格</h1>
+            <p>榮格心理版</p>
         </div>
 
         <div class="card">
@@ -250,6 +304,8 @@
         <div class="card">
             <div class="card-header"><span>2. 靈魂解碼 (榮格 x 五行 x 命運劇場)</span><span>🔮 AI Analysis</span></div>
             <div id="ai-response-container">請輸入 API Key 並點擊啟動，AI 將為您解讀...</div>
+            
+            <div class="analyst-signature" id="analystSign">分析師：仙人指路</div>
         </div>
         <textarea id="aiPrompt" style="display:none;"></textarea>
     </div>
@@ -269,8 +325,6 @@
         "白虎": "創傷/行動/血光/急迫", 
         "玄武": "隱密/慾望/曖昧/騙局" 
     };
-    
-    // 🔥 五行生剋矩陣 [生我, 我生, 剋我, 我剋, 同我]
     const wuxingRels = {
         "金": {sheng:"土", xie:"水", ke:"火", keBy:"木", same:"金"},
         "木": {sheng:"水", xie:"火", ke:"金", keBy:"土", same:"木"},
@@ -286,11 +340,24 @@
     window.addEventListener('load', function() {
         if(localStorage.getItem("openai_key")) document.getElementById('apiKey').value = localStorage.getItem("openai_key");
         if(localStorage.getItem("custom_prompt")) document.getElementById('customPrompt').value = localStorage.getItem("custom_prompt");
+        if(localStorage.getItem("logo_url")) {
+            const url = localStorage.getItem("logo_url");
+            document.getElementById('logoUrlIn').value = url;
+            document.getElementById('mainLogo').src = url;
+            document.getElementById('printLogo').src = url;
+        }
+        if(localStorage.getItem("analyst_name")) {
+            const name = localStorage.getItem("analyst_name");
+            document.getElementById('analystNameIn').value = name;
+            document.getElementById('analystSign').innerText = "分析師：" + name;
+        }
+
         const savedColor = localStorage.getItem("print_color");
         if(savedColor) {
             document.getElementById('printColor').value = savedColor;
             document.documentElement.style.setProperty('--card-print-bg', savedColor);
         }
+        
         const today = new Date();
         const yyyy = today.getFullYear();
         const mm = String(today.getMonth() + 1).padStart(2, '0');
@@ -304,10 +371,21 @@
     });
 
     function toggleSettings() { const p = document.getElementById('settings-panel'); p.style.display = p.style.display==='block'?'none':'block'; }
+    
     function saveSettings() {
         localStorage.setItem("openai_key", document.getElementById('apiKey').value);
         localStorage.setItem("custom_prompt", document.getElementById('customPrompt').value);
+        
+        const logoUrl = document.getElementById('logoUrlIn').value.trim() || 'logo.png';
+        localStorage.setItem("logo_url", logoUrl);
+        document.getElementById('mainLogo').src = logoUrl;
+        document.getElementById('printLogo').src = logoUrl;
+
+        const analystName = document.getElementById('analystNameIn').value.trim() || '仙人指路';
+        localStorage.setItem("analyst_name", analystName);
+        document.getElementById('analystSign').innerText = "分析師：" + analystName;
     }
+
     function updatePrintColor() {
         const c = document.getElementById('printColor').value;
         document.documentElement.style.setProperty('--card-print-bg', c);
@@ -349,7 +427,7 @@
         analyzeAndCallAI();
     }
 
-    // --- Core Logic ---
+    // --- Hex Logic ---
     const hexMap = {
         "1-1":{n:"乾為天",g:"金",pid:1,s:6}, "1-5":{n:"天風姤",g:"金",pid:1,s:1}, "1-7":{n:"天山遯",g:"金",pid:1,s:2}, "1-8":{n:"天地否",g:"金",pid:1,s:3}, "5-8":{n:"風地觀",g:"金",pid:1,s:4}, "7-8":{n:"山地剝",g:"金",pid:1,s:5}, "3-8":{n:"火地晉",g:"金",pid:1,s:4}, "3-1":{n:"火天大有",g:"金",pid:1,s:3},
         "2-2":{n:"兌為澤",g:"金",pid:2,s:6}, "2-6":{n:"澤水困",g:"金",pid:2,s:1}, "2-8":{n:"澤地萃",g:"金",pid:2,s:2}, "2-7":{n:"澤山咸",g:"金",pid:2,s:3}, "6-7":{n:"水山蹇",g:"金",pid:2,s:4}, "8-7":{n:"地山謙",g:"金",pid:2,s:5}, "4-7":{n:"雷山小過",g:"金",pid:2,s:4}, "4-2":{n:"雷澤歸妹",g:"金",pid:2,s:3},
@@ -404,7 +482,7 @@
         return `<span class="tag t-xian">閒</span>`;
     }
 
-    // 🔥 核心：旺衰運算引擎 (V33.0 New)
+    // 🔥 旺衰計算 V33.0 Logic
     function calculateYaoStrength(yaoZhi, yaoWx, mZhi, mWx, dZhi, dWx) {
         let score = 0;
         let desc = "";
@@ -417,15 +495,15 @@
         else if(wuxingRels[mWx].sheng === yaoWx) { score += 1; mRel = "月相"; }
         else if(wuxingRels[yaoWx].sheng === mWx) { score += -0.5; mRel = "月休"; }
         else if(wuxingRels[yaoWx].ke === mWx) { score += -1; mRel = "月囚"; }
-        else { score += -2; mRel = "月死"; } // 月剋爻
+        else { score += -2; mRel = "月死"; }
 
-        // 2. 日辰判斷 (加減分)
+        // 2. 日辰判斷
         let dRel = "";
-        if(yaoZhi === dZhi) { score += 3; dRel = "日建"; } // 日建極強
-        else if(yaoWx === dWx) { score += 2; dRel = "日扶"; } // 同五行
-        else if(wuxingRels[dWx].sheng === yaoWx) { score += 1.5; dRel = "日生"; } // 日生爻 (加分)
-        else if(wuxingRels[dWx].ke === yaoWx) { score -= 2; dRel = "日剋"; } // 日剋爻 (減分)
-        else { dRel = "日洩"; } // 其他情況
+        if(yaoZhi === dZhi) { score += 3; dRel = "日建"; } 
+        else if(yaoWx === dWx) { score += 2; dRel = "日扶"; } 
+        else if(wuxingRels[dWx].sheng === yaoWx) { score += 1.5; dRel = "日生"; } 
+        else if(wuxingRels[dWx].ke === yaoWx) { score -= 2; dRel = "日剋"; } 
+        else { dRel = "日洩"; }
 
         // 3. 神煞判定
         let finalStatus = "";
@@ -435,7 +513,7 @@
             finalStatus = "【月破】";
             cssClass = "st-weak";
         } else if(isDayBreak && score > 0) {
-            finalStatus = "【暗動】"; // 日沖但旺
+            finalStatus = "【暗動】"; 
             cssClass = "st-strong";
         } else if(isDayBreak && score <= 0) {
             finalStatus = "【日破】";
@@ -460,7 +538,6 @@
         const dayZhi = gDay.substring(1);
         const dayWx = wxMap[dayZhi];
         
-        // Options
         const isLove = document.getElementById('checkLove').checked;
         const isHealth = document.getElementById('checkHealth').checked;
         const isWealth = document.getElementById('checkWealth').checked;
@@ -553,7 +630,6 @@
                 barHtml = l.t===1 ? '<div class="bar-yang"></div>' : '<div class="bar-yin"><span></span><span></span></div>';
             }
 
-            // 🔥 調用旺衰計算
             let stObj = calculateYaoStrength(l.b, l.wx, monthZhi, monthWx, dayZhi, dayWx);
             let strengthText = `<span class="status-tag ${stObj.css}">${stObj.status}</span> <span style="font-size:11px;color:#888;">${stObj.desc}</span>`;
 
@@ -604,9 +680,18 @@
 
         let customP = document.getElementById('customPrompt').value;
         let ganzhiStr = document.getElementById('ganzhi-display').innerText;
+        const analystName = document.getElementById('analystNameIn').value.trim() || '仙人指路';
         
-        let p = `你現在是「仙人指路神獸七十二型人格」的 AI 導師。
-請注意：我已經幫你算好了每一爻的【能量旺衰】（如：月旺日扶、月破、暗動），請務必依據這個客觀數據進行解讀，不要自己猜測旺衰。
+        let p = `你現在是「仙人指路神獸七十二型人格」的 AI 導師（分析師：${analystName}）。這份報告是用於【教學與深度心理分析】。
+請不要只列出關鍵字，必須進行「六獸 x 五行 x 六親」的【化學反應解讀】。
+
+### 0. 核心解析邏輯 (請務必遵守)
+1. **忌神 (Shadow) 的解讀**：不要只說「恐懼」。必須解釋「為什麼」？
+   - 範例：若忌神是[兄弟+白虎]，請解釋為「因為過去曾被劫財或競爭失敗的創傷(白虎)，導致現在對投資產生極度恐懼與保守」。
+   - 範例：若忌神是[兄弟+玄武]，請解釋為「因為害怕被欺騙或陷入看不清的騙局(玄武)，而不敢行動」。
+2. **仇神 (Complex/情結) 的解讀**：仇神是內心的「反對聲音/魔鬼教練」，它會生助忌神(陰影)來打擊元神(資源)。
+   - 範例：若仇神是[父母+朱雀+空亡]，請解讀為「內在有個聲音不斷告訴自己：你的文書口才不行(朱雀)，你的腦袋空空(父母空亡)，你根本沒能力賺錢(剋子孫)」。這是一種根深蒂固的自我否定情結。
+3. **六獸與五行**：六獸是「心理特質/情緒」，五行是「現實能量」。請將兩者結合敘述。
 
 ### 1. 核心資訊
 - **問事**：${selectedUseGod}。實際用神為 **[${activeUseGod}]**。
@@ -635,7 +720,7 @@
 
 ### 3. 【🔮 命運劇場：神獸的日常抉擇】
 **故事設定**：${storyThemes.length > 0 ? storyThemes.join(" + ") : "日常抉擇"}。
-**要求**：結合六獸性格與上述旺衰能量，描述案主在壓力下的反應。若用神旺，描述其自信；若用神弱，描述其退縮。
+**要求**：結合六獸性格與上述旺衰能量，描述案主在壓力下的反應。
 
 ### 4. 綜合建議
 ${customP ? '使用者補充：'+customP : ''}
