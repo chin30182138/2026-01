@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>仙人指路 - 榮格心理版 (V34.1 iPad修復)</title>
+    <title>仙人指路 - 榮格心理版 (V34.2 iPad優化)</title>
     <style>
         :root {
             --gold: #d4af37; 
@@ -29,7 +29,7 @@
 
         .container { width: 100%; max-width: 1200px; position: relative; }
 
-        /* Header & Logo */
+        /* Header */
         .header {
             text-align: center; border-bottom: 2px solid var(--gold); padding-bottom: 20px; margin-bottom: 20px; position: relative;
         }
@@ -56,30 +56,25 @@
         .api-input, textarea.custom-prompt, input[type="text"] { width: 100%; background: #000; border: 1px solid #444; color: #0f0; border-radius: 4px; padding: 10px; box-sizing: border-box; margin-bottom: 10px; }
         input[type="color"] { -webkit-appearance: none; border: none; width: 50px; height: 30px; padding: 0; background: none; cursor: pointer; vertical-align: middle; }
 
-        /* Layout */
+        /* Layout - V34.2 優化核心 */
         .control-box {
             background: var(--panel); padding: 20px; border-radius: 10px; border: 1px solid var(--border); display: flex; flex-direction: column; gap: 20px;
         }
         
-        /* 🔥 V34.1 修正核心：原本是 grid，加入 RWD 邏輯 */
-        .row-time { display: grid; grid-template-columns: 1fr 1fr 2fr; gap: 15px; align-items: end; }
+        /* 電腦與平板 (iPad) 模式：橫向排列 */
+        /* 比例調整：日期佔多一點 (1.2)，月時佔少一點 (0.9) */
+        .row-time { display: grid; grid-template-columns: 1.4fr 0.8fr 0.8fr; gap: 15px; align-items: end; }
         .row-hex { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; align-items: end; }
         .row-target { display: grid; grid-template-columns: 1fr 2fr; gap: 15px; }
 
-        /* 🔥 RWD 響應式設計：當螢幕寬度小於 850px (iPad 直立或手機) 時觸發 */
-        @media screen and (max-width: 850px) {
-            .row-time {
-                grid-template-columns: 1fr !important; /* 強制改為單欄，垂直堆疊 */
+        /* 手機模式 (小於 600px) 才變成垂直堆疊 */
+        @media screen and (max-width: 600px) {
+            .row-time, .row-hex, .row-target {
+                grid-template-columns: 1fr !important; /* 強制單欄 */
+                gap: 10px;
             }
-            .row-hex {
-                grid-template-columns: 1fr !important; /* 強制改為單欄 */
-            }
-            .row-target {
-                grid-template-columns: 1fr !important; /* 強制改為單欄 */
-            }
-            /* 讓輸入框更高一點，方便手指點擊 */
             select, input[type="date"] {
-                height: 50px !important; 
+                height: 45px; /* 手機上稍微高一點好點擊 */
             }
         }
 
@@ -94,7 +89,7 @@
             display: flex;
             align-items: center;
             gap: 20px;
-            flex-wrap: wrap; /* 允許換行 */
+            flex-wrap: wrap; 
         }
         .story-options { display: flex; gap: 15px; flex-wrap: wrap; }
         .chk-story-label { 
@@ -104,14 +99,14 @@
         .chk-story-label:hover { border-color: var(--gold); background: #333; }
         .chk-story-label input { accent-color: var(--gold); transform: scale(1.2); }
 
-        label { color: var(--gold); font-size: 13px; font-weight: bold; display: block; margin-bottom: 5px; }
-        select, input[type="date"] { width: 100%; padding: 10px; background: #333; border: 1px solid #555; color: #fff; border-radius: 4px; box-sizing: border-box; font-size: 14px; height: 42px; }
+        label { color: var(--gold); font-size: 13px; font-weight: bold; display: block; margin-bottom: 5px; white-space: nowrap; }
+        select, input[type="date"] { width: 100%; padding: 8px; background: #333; border: 1px solid #555; color: #fff; border-radius: 4px; box-sizing: border-box; font-size: 14px; height: 40px; }
 
-        .btn-random { width: 100%; height: 42px; background: #3498db; border: none; font-weight: bold; cursor: pointer; color: #fff; border-radius: 4px; }
+        .btn-random { width: 100%; height: 40px; background: #3498db; border: none; font-weight: bold; cursor: pointer; color: #fff; border-radius: 4px; }
         .btn-random:hover { background: #2980b9; }
 
-        .moving-zone { background: #222; padding: 10px; border-radius: 4px; border: 1px dashed #555; display: flex; justify-content: space-around; align-items: center; height: 42px; box-sizing: border-box;}
-        .chk-label { cursor: pointer; display: flex; align-items: center; gap: 5px; color: #ccc; font-size: 13px; }
+        .moving-zone { background: #222; padding: 5px; border-radius: 4px; border: 1px dashed #555; display: flex; justify-content: space-around; align-items: center; height: 40px; box-sizing: border-box;}
+        .chk-label { cursor: pointer; display: flex; align-items: center; gap: 3px; color: #ccc; font-size: 13px; }
         .chk-label input { accent-color: var(--gold); }
 
         .btn-group { display: flex; gap: 10px; margin-top: 20px; }
@@ -138,7 +133,6 @@
         }
         .card-header { font-size: 20px; color: var(--gold); border-bottom: 1px dashed #555; padding-bottom: 12px; margin-bottom: 20px; font-weight: bold; letter-spacing: 1px; }
 
-        /* Table Styling */
         .hex-table { width: 100%; border-collapse: collapse; font-size: 15px; }
         .hex-table th { border-bottom: 2px solid var(--gold); color: var(--gold); padding: 12px 5px; }
         .hex-table td { border-bottom: 1px solid #444; padding: 10px 5px; text-align: center; vertical-align: middle; color: #eee; }
@@ -165,7 +159,7 @@
         .ai-loading { color: var(--gold); animation: blink 1s infinite; }
         @keyframes blink { 50% { opacity: 0.5; } }
 
-        /* --- 🖨️ Print Optimization --- */
+        /* --- Print --- */
         @media print {
             body { background-color: #fff; color: #000; padding: 0; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
             .container { max-width: 100%; width: 100%; padding: 20px; }
@@ -174,7 +168,6 @@
             .report-header-print { display: block; text-align: center; margin-bottom: 30px; border-bottom: 3px double #d4af37; padding-bottom: 20px; }
             .report-header-print img { max-width: 120px; height: auto; display: block; margin: 0 auto 10px; }
             .report-header-print h1 { font-size: 24pt; margin: 0; color: #000; font-family: "標楷體", serif; }
-            
             .card {
                 background-color: var(--card-print-bg) !important;
                 border: none !important; 
@@ -216,33 +209,29 @@
     <div class="header">
         <img src="logo.png" alt="Logo" class="logo-img" id="mainLogo">
         <h1>仙人指路神獸七十二型人格</h1>
-        <p>榮格心理版 V34.1 (iPad修復)</p>
+        <p>榮格心理版 V34.2 (iPad優化)</p>
         <div class="settings-btn" onclick="toggleSettings()" title="設定">⚙️</div>
     </div>
 
     <div id="settings-panel">
         <label style="color:#fff;">🔑 OpenAI API Key</label>
         <input type="password" id="apiKey" class="api-input" placeholder="sk-..." onchange="saveSettings()">
-        
         <label style="color:#fff; margin-top:10px;">🖼️ Logo 圖片網址 (或檔名)</label>
         <input type="text" id="logoUrlIn" placeholder="預設: logo.png" onchange="saveSettings()">
-        
         <label style="color:#fff; margin-top:10px;">✍️ 分析師署名</label>
         <input type="text" id="analystNameIn" placeholder="例如: 張天師" onchange="saveSettings()">
-
         <label style="color:#fff; margin-top:10px;">🎨 列印卡片底色</label>
         <div style="display:flex; align-items:center; gap:10px;">
             <input type="color" id="printColor" value="#fdfbf7" onchange="updatePrintColor()">
             <span style="color:#aaa; font-size:14px;">(點擊更換顏色)</span>
         </div>
-        
         <label style="color:#fff; margin-top:10px;">📝 自定義分析提示詞</label>
         <textarea id="customPrompt" class="custom-prompt" placeholder="輸入您的獨門心法..." onchange="saveSettings()"></textarea>
     </div>
 
     <div class="control-box">
         <div class="row-time">
-            <div><label>📅 占卜日期</label><input type="date" id="dateIn" onchange="calcFullGanzhi()"></div>
+            <div><label>📅 占卜日期 (系統自動排日柱)</label><input type="date" id="dateIn" onchange="calcFullGanzhi()"></div>
             <div><label>🌑 月令</label><select id="monthIn" onchange="calcFullGanzhi()"><option value="寅">寅月</option><option value="卯">卯月</option><option value="辰">辰月</option><option value="巳">巳月</option><option value="午">午月</option><option value="未">未月</option><option value="申">申月</option><option value="酉">酉月</option><option value="戌">戌月</option><option value="亥">亥月</option><option value="子">子月</option><option value="丑">丑月</option></select></div>
             <div><label>🕰️ 時辰</label><select id="hourIn" onchange="calcFullGanzhi()"><option value="子">子時</option><option value="丑">丑時</option><option value="寅">寅時</option><option value="卯">卯時</option><option value="辰">辰時</option><option value="巳">巳時</option><option value="午">午時</option><option value="未">未時</option><option value="申">申時</option><option value="酉">酉時</option><option value="戌">戌時</option><option value="亥">亥時</option></select></div>
         </div>
@@ -308,7 +297,6 @@
         <div class="card">
             <div class="card-header"><span>2. 靈魂解碼 (榮格 x 五行 x 命運劇場)</span><span>🔮 AI Analysis</span></div>
             <div id="ai-response-container">請輸入 API Key 並點擊啟動，AI 將為您解讀...</div>
-            
             <div class="analyst-signature" id="analystSign">分析師：仙人指路</div>
         </div>
         <textarea id="aiPrompt" style="display:none;"></textarea>
