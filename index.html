@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>仙人指路 - 榮格心理版 (V35.0 明心見性版)</title>
+    <title>仙人指路 - 榮格心理版 (V35.1 經典引用強化)</title>
     <style>
         :root {
             --gold: #d4af37; 
@@ -61,12 +61,10 @@
             background: var(--panel); padding: 20px; border-radius: 10px; border: 1px solid var(--border); display: flex; flex-direction: column; gap: 20px;
         }
         
-        /* iPad/Desktop Layout */
         .row-time { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 15px; align-items: end; }
         .row-hex { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; align-items: end; }
         .row-target { display: grid; grid-template-columns: 1fr 2fr; gap: 15px; }
 
-        /* Mobile Layout */
         @media screen and (max-width: 600px) {
             .row-time, .row-hex, .row-target {
                 grid-template-columns: 1fr !important;
@@ -97,7 +95,6 @@
 
         label { color: var(--gold); font-size: 13px; font-weight: bold; display: block; margin-bottom: 5px; white-space: nowrap; }
         
-        /* Input Styling */
         select, input[type="date"] { 
             width: 100%; 
             height: 45px !important; 
@@ -221,7 +218,7 @@
     <div class="header">
         <img src="logo.png" alt="Logo" class="logo-img" id="mainLogo">
         <h1>仙人指路神獸七十二型人格</h1>
-        <p>榮格心理版 V35.0 (明心見性版)</p>
+        <p>榮格心理版 V35.1 (經典引用強化)</p>
         <div class="settings-btn" onclick="toggleSettings()" title="設定">⚙️</div>
     </div>
 
@@ -486,14 +483,13 @@
         return `<span class="tag t-xian">閒</span>`;
     }
 
-    // 🔥 旺衰計算 V33.0 Logic
+    // 🔥 旺衰計算
     function calculateYaoStrength(yaoZhi, yaoWx, mZhi, mWx, dZhi, dWx) {
         let score = 0;
         let desc = "";
         let isMonthBreak = (clashesMap[mZhi] === yaoZhi);
         let isDayBreak = (clashesMap[dZhi] === yaoZhi);
         
-        // 1. 月令判斷
         let mRel = "";
         if(yaoWx === mWx) { score += 2; mRel = "月旺"; }
         else if(wuxingRels[mWx].sheng === yaoWx) { score += 1; mRel = "月相"; }
@@ -501,7 +497,6 @@
         else if(wuxingRels[yaoWx].ke === mWx) { score += -1; mRel = "月囚"; }
         else { score += -2; mRel = "月死"; }
 
-        // 2. 日辰判斷
         let dRel = "";
         if(yaoZhi === dZhi) { score += 3; dRel = "日建"; } 
         else if(yaoWx === dWx) { score += 2; dRel = "日扶"; } 
@@ -509,19 +504,15 @@
         else if(wuxingRels[dWx].ke === yaoWx) { score -= 2; dRel = "日剋"; } 
         else { dRel = "日洩"; }
 
-        // 3. 神煞判定
         let finalStatus = "";
         let cssClass = "st-mid";
 
         if(isMonthBreak) {
-            finalStatus = "【月破】";
-            cssClass = "st-weak";
+            finalStatus = "【月破】"; cssClass = "st-weak";
         } else if(isDayBreak && score > 0) {
-            finalStatus = "【暗動】"; 
-            cssClass = "st-strong";
+            finalStatus = "【暗動】"; cssClass = "st-strong";
         } else if(isDayBreak && score <= 0) {
-            finalStatus = "【日破】";
-            cssClass = "st-weak";
+            finalStatus = "【日破】"; cssClass = "st-weak";
         } else {
             if(score >= 2) { finalStatus = "【旺】"; cssClass = "st-strong"; }
             else if(score <= -1) { finalStatus = "【弱】"; cssClass = "st-weak"; }
@@ -723,12 +714,8 @@
    *狀態*：${pXian.length>0 ? pXian.join('；') : '無'}。
 
 ### 3. 【🧘 明心見性：洞見內在真我】
-**分析對象**：僅針對【元神】(Inner Self)。
-**解讀風格**：請使用【佛法】(如：執著、因果、本性、放下) 或【道家】(如：順勢、無為、氣場) 的哲學觀點。
-**內容要求**：
-1. 結合元神的六獸(靈性特質)與五行旺衰(能量狀態)。
-2. 指出案主此刻「修行的課題」是什麼？(例如：白虎元神旺，或許是修煉「轉念」與「慈悲」；玄武元神弱，或許是尋回「本心」與「誠實」)。
-3. 給予一句富有禪意的指引。
+**引用要求**：請務必「引經據典」。例如引用《金剛經》：「應無所住而生其心」或《道德經》：「致虛極，守靜篤」或禪宗公案。
+**結合解讀**：請引用一句經典原話，並解釋為何案主的元神（結合其六獸特質與旺衰）需要這句指引。
 
 ### 4. 【🔮 命運劇場：神獸的日常抉擇】
 **故事設定**：${storyThemes.length > 0 ? storyThemes.join(" + ") : "日常抉擇"}。
