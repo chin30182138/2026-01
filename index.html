@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>仙人指路 - 榮格心理版 (V34.3 iPad完美版)</title>
+    <title>仙人指路 - 榮格心理版 (V35.0 明心見性版)</title>
     <style>
         :root {
             --gold: #d4af37; 
@@ -61,12 +61,12 @@
             background: var(--panel); padding: 20px; border-radius: 10px; border: 1px solid var(--border); display: flex; flex-direction: column; gap: 20px;
         }
         
-        /* 🔥 V34.3 修正：給予日期欄位更大的權重 (2fr) */
+        /* iPad/Desktop Layout */
         .row-time { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 15px; align-items: end; }
         .row-hex { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; align-items: end; }
         .row-target { display: grid; grid-template-columns: 1fr 2fr; gap: 15px; }
 
-        /* 手機模式 (小於 600px) 才變成垂直堆疊 */
+        /* Mobile Layout */
         @media screen and (max-width: 600px) {
             .row-time, .row-hex, .row-target {
                 grid-template-columns: 1fr !important;
@@ -97,20 +97,20 @@
 
         label { color: var(--gold); font-size: 13px; font-weight: bold; display: block; margin-bottom: 5px; white-space: nowrap; }
         
-        /* 🔥 V34.3 修正：強制統一下拉選單與日期輸入框的高度與樣式 */
+        /* Input Styling */
         select, input[type="date"] { 
             width: 100%; 
-            height: 45px !important; /* 強制高度 */
-            padding: 0 10px; /* 統一內距 */
+            height: 45px !important; 
+            padding: 0 10px; 
             background: #333; 
             border: 1px solid #555; 
             color: #fff; 
             border-radius: 4px; 
             box-sizing: border-box; 
-            font-size: 16px; /* 防止 iOS 自動放大 */
-            -webkit-appearance: none; /* 移除 iOS 預設的立體圓角樣式 */
+            font-size: 16px; 
+            -webkit-appearance: none; 
             appearance: none;
-            line-height: 45px; /* 垂直置中 */
+            line-height: 45px; 
             display: block;
         }
 
@@ -221,7 +221,7 @@
     <div class="header">
         <img src="logo.png" alt="Logo" class="logo-img" id="mainLogo">
         <h1>仙人指路神獸七十二型人格</h1>
-        <p>榮格心理版 V34.3 (iPad完美版)</p>
+        <p>榮格心理版 V35.0 (明心見性版)</p>
         <div class="settings-btn" onclick="toggleSettings()" title="設定">⚙️</div>
     </div>
 
@@ -619,7 +619,6 @@
             let isBroken = (l.b === clashesMap[monthZhi]);
             let isVoid = gKw.includes(l.b);
             if(isVoid) tags += `<span class="tag t-void">空</span>`;
-            if(isBroken) tags += `<span class="tag t-po">破</span>`;
             if(i+1 === shiPos) tags += `<span class="tag t-shi">世</span>`;
             if(i+1 === yingPos) tags += `<span class="tag t-ying">應</span>`;
 
@@ -723,11 +722,19 @@
 **(5) 閒神 - 能量耗損**
    *狀態*：${pXian.length>0 ? pXian.join('；') : '無'}。
 
-### 3. 【🔮 命運劇場：神獸的日常抉擇】
+### 3. 【🧘 明心見性：洞見內在真我】
+**分析對象**：僅針對【元神】(Inner Self)。
+**解讀風格**：請使用【佛法】(如：執著、因果、本性、放下) 或【道家】(如：順勢、無為、氣場) 的哲學觀點。
+**內容要求**：
+1. 結合元神的六獸(靈性特質)與五行旺衰(能量狀態)。
+2. 指出案主此刻「修行的課題」是什麼？(例如：白虎元神旺，或許是修煉「轉念」與「慈悲」；玄武元神弱，或許是尋回「本心」與「誠實」)。
+3. 給予一句富有禪意的指引。
+
+### 4. 【🔮 命運劇場：神獸的日常抉擇】
 **故事設定**：${storyThemes.length > 0 ? storyThemes.join(" + ") : "日常抉擇"}。
 **要求**：結合六獸性格與上述旺衰能量，描述案主在壓力下的反應。
 
-### 4. 綜合建議
+### 5. 綜合建議
 ${customP ? '使用者補充：'+customP : ''}
 請給出一段總結性的靈性指引。`;
 
